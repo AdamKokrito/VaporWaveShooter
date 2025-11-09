@@ -2,11 +2,11 @@ extends CharacterBody3D
 class_name Player
 
 @onready var head: Node3D = $Head
-@onready var camera: Camera3D = $Head/Camera3D
+@onready var camera_effect: CameraEffects = $Head/Camera
 @onready var stand_col: CollisionShape3D = $StandCol
 @onready var crouch_col: CollisionShape3D = $CrouchCol
-@onready var state_chart: StateChart = $StateChart
 @onready var crouch_check: ShapeCast3D = $CrouchCheck
+@onready var state_chart: StateChart = $StateChart
 
 @export_group("Easing")
 @export var acceleration : float = 0.2
@@ -18,7 +18,6 @@ class_name Player
 @export_category("Jump")
 @export var jump_velocity : float = 5.0
 @export var fall_velocity_threshold : float = -5.0
-@export_group("Crouch")
 
 
 var _input_dir : Vector2 = Vector2.ZERO
@@ -26,12 +25,12 @@ var _mouvement_velocity : Vector3 = Vector3.ZERO
 var sprint_modifier : float = 0.0
 var crouch_modifier : float = 0.0 
 var _speed : float = 0.0
-var curren_fall_velocity
+var curren_fall_velocity : float
 
 func _physics_process(delta: float) -> void:
 	
 	if not is_on_floor():
-		global_position.y += get_gravity().y * delta
+		velocity.y += get_gravity().y * delta
 	
 	var current_velocity : Vector2 = Vector2(_mouvement_velocity.x,_mouvement_velocity.z)
 	var speed_modifier = sprint_modifier + crouch_modifier
@@ -77,3 +76,6 @@ func crouch()->void:
 	crouch_modifier = crouch_speed
 	stand_col.disabled = true
 	crouch_col.disabled = false
+
+func jump()->void:
+	velocity.y += jump_velocity

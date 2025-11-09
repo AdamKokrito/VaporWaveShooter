@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://d3f4d5lvcbvvk"]
+
+[ext_resource type="Script" uid="uid://dmbo7s8gfxba4" path="res://scripts/retical_draw.gd" id="1_tg63u"]
+
+[node name="Interface" type="CanvasLayer"]
+
+[node name="Crosshair" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ReticalDraw" type="Control" parent="Crosshair"]
+layout_mode = 2
+script = ExtResource("1_tg63u")
+radius = 20.0
+thickness = 3.0
