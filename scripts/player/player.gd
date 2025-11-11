@@ -6,6 +6,7 @@ class_name Player
 @onready var stand_col: CollisionShape3D = $StandCol
 @onready var crouch_col: CollisionShape3D = $CrouchCol
 @onready var crouch_check: ShapeCast3D = $CrouchCheck
+@onready var step_handler: StepHandlerComponent = $Components/StepHandler
 @onready var state_chart: StateChart = $StateChart
 
 @export_group("Easing")
@@ -20,6 +21,7 @@ class_name Player
 @export var fall_velocity_threshold : float = -5.0
 
 
+
 var _input_dir : Vector2 = Vector2.ZERO
 var _mouvement_velocity : Vector3 = Vector3.ZERO
 var sprint_modifier : float = 0.0
@@ -27,9 +29,12 @@ var crouch_modifier : float = 0.0
 var _speed : float = 0.0
 var curren_fall_velocity : float
 
+
+
 func _physics_process(delta: float) -> void:
-	
-	if not is_on_floor():
+	if is_on_floor():
+		step_handler.last_frame_on_floor = Engine.get_physics_frames()
+	else:
 		velocity.y += get_gravity().y * delta
 	
 	var current_velocity : Vector2 = Vector2(_mouvement_velocity.x,_mouvement_velocity.z)
@@ -48,7 +53,10 @@ func _physics_process(delta: float) -> void:
 	
 	velocity = _mouvement_velocity
 	
-	move_and_slide()
+	if not step_handler.snap_up_stairs_check(delta):
+		move_and_slide()
+		step_handler.snap_down_to_stairs_check()
+	step_handler.slide_camera_back_to_origin(delta)
 
 func update_rotation(rotation_input:Vector3)->void:
 	global_transform.basis = Basis.from_euler(rotation_input)
@@ -79,3 +87,6 @@ func crouch()->void:
 
 func jump()->void:
 	velocity.y += jump_velocity
+
+func get_input_direction()->Vector2:
+	return _input_dir

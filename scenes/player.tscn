@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://bhop26d66s581"]
+[gd_scene load_steps=24 format=3 uid="uid://bhop26d66s581"]
 
 [ext_resource type="Script" uid="uid://bnorctsg14k6r" path="res://scripts/player/mouse_capture_component.gd" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://bul1vpdae7den" path="res://scripts/player/player.gd" id="1_g2els"]
@@ -19,10 +19,11 @@
 [ext_resource type="Script" uid="uid://j0kdveal7on7" path="res://scripts/player/statemachine/states/crouching.gd" id="9_a8ls1"]
 [ext_resource type="Script" uid="uid://cf1nsco3w0mf6" path="res://addons/godot_state_charts/transition.gd" id="9_y4r1p"]
 [ext_resource type="PackedScene" uid="uid://bcwkugn6v3oy7" path="res://addons/godot_state_charts/utilities/state_chart_debugger.tscn" id="12_3v2ag"]
+[ext_resource type="Script" uid="uid://b5er45fjd872i" path="res://scripts/player/step_handler.gd" id="19_60mlk"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_u8vuu"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_f1ej7"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_60mlk"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_fulsm"]
 
@@ -31,21 +32,24 @@ collision_layer = 2
 script = ExtResource("1_g2els")
 
 [node name="StandCol" type="CollisionShape3D" parent="."]
+visible = false
 shape = SubResource("CapsuleShape3D_u8vuu")
 
 [node name="CrouchCol" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
-shape = SubResource("SphereShape3D_f1ej7")
+shape = SubResource("SphereShape3D_60mlk")
 
 [node name="Head" type="Node3D" parent="." node_paths=PackedStringArray("component_mouse_capture", "camera")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 script = ExtResource("2_qhqgy")
 component_mouse_capture = NodePath("../Components/MouseCaptureComponent")
 camera = NodePath("Camera")
+crouch_offset = -0.5
 
 [node name="Camera" type="Camera3D" parent="Head" node_paths=PackedStringArray("player")]
 script = ExtResource("3_4r5pv")
 player = NodePath("../..")
+enable_head_bob = false
 
 [node name="RayCast3D" type="RayCast3D" parent="Head/Camera"]
 target_position = Vector3(0, 0, -3)
@@ -189,10 +193,25 @@ delay_in_seconds = "0.0"
 [node name="MouseCaptureComponent" type="Node" parent="Components"]
 script = ExtResource("1_3vyb7")
 
+[node name="StepHandler" type="Node" parent="Components" node_paths=PackedStringArray("player", "head", "stairs_ahead", "stairs_below")]
+script = ExtResource("19_60mlk")
+player = NodePath("../..")
+head = NodePath("../../Head")
+stairs_ahead = NodePath("../../StairsAhead")
+stairs_below = NodePath("../../StairsBelow")
+
 [node name="StateChartDebugger" parent="." instance=ExtResource("12_3v2ag")]
 offset_right = -953.0
 offset_bottom = -324.0
 initial_node_to_watch = NodePath("../StateChart")
+
+[node name="StairsAhead" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4512124, -0.89100194)
+target_position = Vector3(0, -0.55, 0)
+
+[node name="StairsBelow" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+target_position = Vector3(0, -0.75, 0)
 
 [connection signal="state_physics_processing" from="StateChart/Root/Mouvement/Grounded" to="StateMachine/Root/Mouvement/Grounded" method="_on_grounded_state_physics_processing"]
 [connection signal="state_physics_processing" from="StateChart/Root/Mouvement/Grounded/idle" to="StateMachine/Root/Mouvement/Grounded/Idle" method="_on_idle_state_physics_processing"]
