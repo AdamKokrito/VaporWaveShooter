@@ -1,7 +1,8 @@
-[gd_scene load_steps=24 format=3 uid="uid://bhop26d66s581"]
+[gd_scene load_steps=28 format=3 uid="uid://bhop26d66s581"]
 
 [ext_resource type="Script" uid="uid://bnorctsg14k6r" path="res://scripts/player/mouse_capture_component.gd" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://bul1vpdae7den" path="res://scripts/player/player.gd" id="1_g2els"]
+[ext_resource type="Script" uid="uid://d1eo3unyiu8dk" path="res://scripts/stats.gd" id="2_a38lo"]
 [ext_resource type="Script" uid="uid://cebgaixlayyse" path="res://scripts/player/camera_controller.gd" id="2_qhqgy"]
 [ext_resource type="Script" uid="uid://bhsskko2nw5jw" path="res://scripts/player/camera_effects.gd" id="3_4r5pv"]
 [ext_resource type="Script" uid="uid://c5p87x3ks4xpa" path="res://scripts/player/statemachine/state_machine.gd" id="3_smehm"]
@@ -18,8 +19,9 @@
 [ext_resource type="Script" uid="uid://dwh2brjhdwkw6" path="res://scripts/player/statemachine/states/air_born.gd" id="9_4r5pv"]
 [ext_resource type="Script" uid="uid://j0kdveal7on7" path="res://scripts/player/statemachine/states/crouching.gd" id="9_a8ls1"]
 [ext_resource type="Script" uid="uid://cf1nsco3w0mf6" path="res://addons/godot_state_charts/transition.gd" id="9_y4r1p"]
-[ext_resource type="PackedScene" uid="uid://bcwkugn6v3oy7" path="res://addons/godot_state_charts/utilities/state_chart_debugger.tscn" id="12_3v2ag"]
 [ext_resource type="Script" uid="uid://b5er45fjd872i" path="res://scripts/player/step_handler.gd" id="19_60mlk"]
+[ext_resource type="Script" uid="uid://cucso6p0t07s2" path="res://scripts/player/stats_handler.gd" id="21_4ni07"]
+[ext_resource type="Script" uid="uid://3tcow7oyiab4" path="res://scripts/hit_hurt/hurt_box.gd" id="21_i4ail"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_u8vuu"]
 
@@ -27,12 +29,17 @@
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_fulsm"]
 
+[sub_resource type="Resource" id="Resource_4ni07"]
+script = ExtResource("2_a38lo")
+metadata/_custom_type_script = "uid://d1eo3unyiu8dk"
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_a38lo"]
+
 [node name="Player" type="CharacterBody3D"]
 collision_layer = 2
 script = ExtResource("1_g2els")
 
 [node name="StandCol" type="CollisionShape3D" parent="."]
-visible = false
 shape = SubResource("CapsuleShape3D_u8vuu")
 
 [node name="CrouchCol" type="CollisionShape3D" parent="."]
@@ -49,7 +56,6 @@ crouch_offset = -0.5
 [node name="Camera" type="Camera3D" parent="Head" node_paths=PackedStringArray("player")]
 script = ExtResource("3_4r5pv")
 player = NodePath("../..")
-enable_head_bob = false
 
 [node name="RayCast3D" type="RayCast3D" parent="Head/Camera"]
 target_position = Vector3(0, 0, -3)
@@ -200,10 +206,10 @@ head = NodePath("../../Head")
 stairs_ahead = NodePath("../../StairsAhead")
 stairs_below = NodePath("../../StairsBelow")
 
-[node name="StateChartDebugger" parent="." instance=ExtResource("12_3v2ag")]
-offset_right = -953.0
-offset_bottom = -324.0
-initial_node_to_watch = NodePath("../StateChart")
+[node name="StatsHandler" type="Node" parent="Components" node_paths=PackedStringArray("hurt_box")]
+script = ExtResource("21_4ni07")
+stats = SubResource("Resource_4ni07")
+hurt_box = NodePath("../../HurtBox")
 
 [node name="StairsAhead" type="RayCast3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4512124, -0.89100194)
@@ -212,6 +218,15 @@ target_position = Vector3(0, -0.55, 0)
 [node name="StairsBelow" type="RayCast3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 target_position = Vector3(0, -0.75, 0)
+
+[node name="HurtBox" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 16
+script = ExtResource("21_i4ail")
+metadata/_custom_type_script = "uid://3tcow7oyiab4"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HurtBox"]
+shape = SubResource("CapsuleShape3D_a38lo")
 
 [connection signal="state_physics_processing" from="StateChart/Root/Mouvement/Grounded" to="StateMachine/Root/Mouvement/Grounded" method="_on_grounded_state_physics_processing"]
 [connection signal="state_physics_processing" from="StateChart/Root/Mouvement/Grounded/idle" to="StateMachine/Root/Mouvement/Grounded/Idle" method="_on_idle_state_physics_processing"]

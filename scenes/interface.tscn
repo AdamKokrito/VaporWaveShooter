@@ -1,6 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://d3f4d5lvcbvvk"]
+[gd_scene load_steps=4 format=3 uid="uid://d3f4d5lvcbvvk"]
 
 [ext_resource type="Script" uid="uid://dmbo7s8gfxba4" path="res://scripts/retical_draw.gd" id="1_tg63u"]
+[ext_resource type="Shader" uid="uid://cwuyv0alidwt1" path="res://shaders/VHS.gdshader" id="2_lw6my"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_t72xj"]
+shader = ExtResource("2_lw6my")
+shader_parameter/wiggle = 0.03
+shader_parameter/wiggle_speed = 25.0
+shader_parameter/smear = 0.2330000110675
+shader_parameter/blur_samples = 15
 
 [node name="Interface" type="CanvasLayer"]
 
@@ -16,3 +24,22 @@ layout_mode = 2
 script = ExtResource("1_tg63u")
 radius = 20.0
 thickness = 3.0
+
+[node name="VFX" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="VHS" type="ColorRect" parent="VFX"]
+material = SubResource("ShaderMaterial_t72xj")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1

@@ -16,9 +16,18 @@ run/main_scene="uid://d3qg6rfdwp5kr"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+Global="*res://scripts/Global.gd"
+DebugMenu="*res://addons/debug_menu/debug_menu.tscn"
+
+[display]
+
+window/vsync/vsync_mode=0
+
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godot_state_charts/plugin.cfg", "res://addons/linear_stairs/plugin.cfg")
+enabled=PackedStringArray("res://addons/debug_menu/plugin.cfg", "res://addons/godot_state_charts/plugin.cfg", "res://addons/linear_stairs/plugin.cfg")
 
 [input]
 
@@ -73,6 +82,16 @@ fire={
 ]
 }
 
+[layer_names]
+
+3d_physics/layer_1="world"
+3d_physics/layer_2="player"
+3d_physics/layer_3="enemy"
+3d_physics/layer_4="hurt"
+3d_physics/layer_5="hit"
+3d_physics/layer_6="soft_col"
+
 [rendering]
 
 anti_aliasing/quality/msaa_3d=2
+occlusion_culling/use_occlusion_culling=true

@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://d3qg6rfdwp5kr"]
+[gd_scene load_steps=6 format=3 uid="uid://d3qg6rfdwp5kr"]
 
 [ext_resource type="PackedScene" uid="uid://dm3gqheyx1prf" path="res://scenes/test.tscn" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://bk8buroylsa04" path="res://scripts/game_manager.gd" id="1_sugp2"]
 [ext_resource type="PackedScene" uid="uid://d3f4d5lvcbvvk" path="res://scenes/interface.tscn" id="2_0wfyh"]
+[ext_resource type="Script" uid="uid://b5j4x7xtlwyf" path="res://scripts/wave_manager.gd" id="2_jyhfs"]
+[ext_resource type="PackedScene" uid="uid://ccrk55ebba6wa" path="res://scenes/base_enemy.tscn" id="4_tbgi4"]
 
 [node name="Main" type="Node"]
 
@@ -11,8 +13,23 @@
 [node name="GameManager" type="Node" parent="Managers"]
 script = ExtResource("1_sugp2")
 
+[node name="WaveManager" type="Node" parent="Managers" node_paths=PackedStringArray("spawns")]
+script = ExtResource("2_jyhfs")
+enemy_scene = ExtResource("4_tbgi4")
+spawns = NodePath("../../CurrentLevel/Spawner")
+max_enemy_spawned = 60
+
+[node name="SpawnTimer" type="Timer" parent="Managers/WaveManager"]
+wait_time = 0.07
+autostart = true
+
 [node name="CurrentLevel" type="Node3D" parent="."]
 
 [node name="Test" parent="CurrentLevel" instance=ExtResource("1_o5qli")]
 
+[node name="Spawner" type="Node3D" parent="CurrentLevel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -6)
+
 [node name="Interface" parent="." instance=ExtResource("2_0wfyh")]
+
+[connection signal="timeout" from="Managers/WaveManager/SpawnTimer" to="Managers/WaveManager" method="_on_spawn_timer_timeout"]

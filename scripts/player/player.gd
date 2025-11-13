@@ -9,6 +9,8 @@ class_name Player
 @onready var step_handler: StepHandlerComponent = $Components/StepHandler
 @onready var state_chart: StateChart = $StateChart
 
+
+
 @export_group("Easing")
 @export var acceleration : float = 0.2
 @export var deceleration : float = 0.5
@@ -16,7 +18,7 @@ class_name Player
 @export var default_speed : float = 7.0
 @export var sprint_speed : float = 3.0
 @export var crouch_speed : float = -5.0
-@export_category("Jump")
+@export_group("Jump")
 @export var jump_velocity : float = 5.0
 @export var fall_velocity_threshold : float = -5.0
 
@@ -29,7 +31,11 @@ var crouch_modifier : float = 0.0
 var _speed : float = 0.0
 var curren_fall_velocity : float
 
+func _ready() -> void:
+	Global.player = self
 
+func _exit_tree() -> void:
+	Global.player = null
 
 func _physics_process(delta: float) -> void:
 	if is_on_floor():

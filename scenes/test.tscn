@@ -1,19 +1,17 @@
-[gd_scene load_steps=9 format=3 uid="uid://dm3gqheyx1prf"]
+[gd_scene load_steps=7 format=3 uid="uid://dm3gqheyx1prf"]
 
-[ext_resource type="CompressedTexture3D" uid="uid://djcwtynegcnfa" path="res://textures/SynthLut.png" id="1_74lek"]
-[ext_resource type="Shader" uid="uid://d4kldxp6gw87k" path="res://vaporsky.gdshader" id="1_bl13t"]
-[ext_resource type="PackedScene" uid="uid://bhop26d66s581" path="res://scenes/player.tscn" id="1_errlg"]
+[ext_resource type="Shader" uid="uid://d4kldxp6gw87k" path="res://shaders/vaporsky.gdshader" id="1_bl13t"]
+[ext_resource type="PackedScene" uid="uid://bhop26d66s581" path="res://scenes/player.tscn" id="2_bl13t"]
 [ext_resource type="Material" uid="uid://dw40rsqkm42km" path="res://textures/Tile.tres" id="3_iyx0m"]
-[ext_resource type="Script" uid="uid://bwltwwc3y04uc" path="res://addons/linear_stairs/nodes/csg_linear_stairs.gd" id="5_j5jx5"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_iyx0m"]
 shader = ExtResource("1_bl13t")
-shader_parameter/sky_color = Color(0.1, 0.07, 0.2, 1)
-shader_parameter/sky_horizon_color = Color(0.56, 0.18, 0.42, 1)
+shader_parameter/sky_color = Color(0.107421875, 0, 0.21484375, 1)
+shader_parameter/sky_horizon_color = Color(0.703125, 0.28564453, 0.4911232, 1)
 shader_parameter/sky_horizon_decay = 3.0
 shader_parameter/ground_color = Color(0, 0, 0, 1)
-shader_parameter/ground_horizon_color = Color(0.1, 0, 0.07, 1)
-shader_parameter/ground_horizon_decay = 1.0
+shader_parameter/ground_horizon_color = Color(0.6015625, 0.16918945, 0.463068, 1)
+shader_parameter/ground_horizon_decay = 28.0000004172336
 shader_parameter/stars_enabled = true
 shader_parameter/stars_below_horizon = false
 shader_parameter/star_color = Color(0.95, 0.9, 0.6, 1)
@@ -36,7 +34,7 @@ shader_parameter/sun_glow_radius = 30.0
 shader_parameter/sun_glow_intensity = 0.5
 shader_parameter/sun_gradient_enabled = true
 shader_parameter/sun_color_1 = Color(0.96, 0.9, 0.35, 1)
-shader_parameter/sun_color_2 = Color(0.96, 0.35, 0.9, 1)
+shader_parameter/sun_color_2 = Color(1, 0.1875, 0, 1)
 shader_parameter/sun_gradient_pos_frac = 0.6
 shader_parameter/sun_gradient_span_frac = 0.8
 shader_parameter/sun_banding_enabled = true
@@ -52,54 +50,28 @@ sky_material = SubResource("ShaderMaterial_iyx0m")
 background_mode = 2
 sky = SubResource("Sky_74lek")
 tonemap_mode = 2
-glow_blend_mode = 1
-fog_light_color = Color(0.90625, 0.9980469, 1, 1)
-fog_sky_affect = 0.0
-adjustment_enabled = true
-adjustment_color_correction = ExtResource("1_74lek")
+ssr_enabled = true
+glow_enabled = true
+glow_bloom = 0.01
 
 [node name="Test" type="Node3D"]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.98592037, 0.167216, 0, -0.16721605, 0.9859203, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 0.9882979, 0.15253736, 0, -0.15253732, 0.9882978, 0, 0, 0)
 shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_iyx0m")
 
-[node name="Player" parent="." instance=ExtResource("1_errlg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8, 0)
-
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
 material_override = ExtResource("3_iyx0m")
 use_collision = true
 
-[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
-use_collision = true
-size = Vector3(100, 1, 100)
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -19.5, 0)
+radius = 50.0
+height = 39.0
+sides = 16
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 2, -6)
-size = Vector3(6, 1, 1)
-
-[node name="CSGBox3D3" type="CSGBox3D" parent="CSGCombiner3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1, -6)
-size = Vector3(3, 3, 1)
-
-[node name="CSGBox3D4" type="CSGBox3D" parent="CSGCombiner3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1, -6)
-size = Vector3(3, 3, 1)
-
-[node name="CSGBox3D5" type="CSGBox3D" parent="CSGCombiner3D"]
-transform = Transform3D(1, 0, 0, 0, 0.4146297, 0.90999025, 0, -0.90999025, 0.4146297, 6, 0.8096915, -2.476255)
-size = Vector3(3, 10.126953, 1)
-
-[node name="CSGLinearStairs" type="CSGCombiner3D" parent="CSGCombiner3D"]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -3, 0, -5.5)
-script = ExtResource("5_j5jx5")
-stairs_amount = 10
-stairs_width = 3.0
-stair_height = 0.2
-stair_depth = 0.5
-metadata/_custom_type_script = "uid://bwltwwc3y04uc"
+[node name="Player" parent="." instance=ExtResource("2_bl13t")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
