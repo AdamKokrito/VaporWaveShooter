@@ -11,7 +11,7 @@ class_name CameraEffects
 @export var enable_head_bob : bool = true
 @export_group("Run&Tilt")
 @export var run_pitch : float = 0.1
-@export var run_roll : float = 0.25
+@export var run_roll : float = 0.5
 @export var max_pitch : float = 1.0
 @export var max_roll : float = 2.5
 @export_group("Cam Kick")

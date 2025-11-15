@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://bhop26d66s581"]
+[gd_scene load_steps=30 format=3 uid="uid://bhop26d66s581"]
 
 [ext_resource type="Script" uid="uid://bnorctsg14k6r" path="res://scripts/player/mouse_capture_component.gd" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://bul1vpdae7den" path="res://scripts/player/player.gd" id="1_g2els"]
@@ -22,6 +22,8 @@
 [ext_resource type="Script" uid="uid://b5er45fjd872i" path="res://scripts/player/step_handler.gd" id="19_60mlk"]
 [ext_resource type="Script" uid="uid://cucso6p0t07s2" path="res://scripts/player/stats_handler.gd" id="21_4ni07"]
 [ext_resource type="Script" uid="uid://3tcow7oyiab4" path="res://scripts/hit_hurt/hurt_box.gd" id="21_i4ail"]
+[ext_resource type="Script" uid="uid://jqxq4nbol7ps" path="res://scripts/weapons/weapon_controller.gd" id="22_ke2ow"]
+[ext_resource type="Resource" uid="uid://dv83oc30rw574" path="res://resources/G19/G19.tres" id="23_ujl30"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_u8vuu"]
 
@@ -57,8 +59,9 @@ crouch_offset = -0.5
 script = ExtResource("3_4r5pv")
 player = NodePath("../..")
 
-[node name="RayCast3D" type="RayCast3D" parent="Head/Camera"]
-target_position = Vector3(0, 0, -3)
+[node name="ShootCast" type="RayCast3D" parent="Head/Camera"]
+target_position = Vector3(0, 0, -200)
+collision_mask = 5
 
 [node name="CrouchCheck" type="ShapeCast3D" parent="."]
 shape = SubResource("SphereShape3D_fulsm")
@@ -210,6 +213,13 @@ stairs_below = NodePath("../../StairsBelow")
 script = ExtResource("21_4ni07")
 stats = SubResource("Resource_4ni07")
 hurt_box = NodePath("../../HurtBox")
+
+[node name="WeaponController" type="Node" parent="Components" node_paths=PackedStringArray("player", "weapon_holder", "raycast")]
+script = ExtResource("22_ke2ow")
+player = NodePath("../..")
+current_weapon = ExtResource("23_ujl30")
+weapon_holder = NodePath("../../Head/Camera")
+raycast = NodePath("../../Head/Camera/ShootCast")
 
 [node name="StairsAhead" type="RayCast3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4512124, -0.89100194)

@@ -18,7 +18,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Global="*res://scripts/Global.gd"
+Global="*res://scripts/game/Global.gd"
 DebugMenu="*res://addons/debug_menu/debug_menu.tscn"
 
 [display]
@@ -28,6 +28,10 @@ window/vsync/vsync_mode=0
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/debug_menu/plugin.cfg", "res://addons/godot_state_charts/plugin.cfg", "res://addons/linear_stairs/plugin.cfg")
+
+[global_group]
+
+enemy=""
 
 [input]
 

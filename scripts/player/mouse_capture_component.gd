@@ -23,4 +23,3 @@ func _ready() -> void:
 	
 func _process(_delta: float) -> void:
 	_mouse_input = Vector2.ZERO
-	

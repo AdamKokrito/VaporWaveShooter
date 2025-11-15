@@ -1,8 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://dm3gqheyx1prf"]
+[gd_scene load_steps=6 format=3 uid="uid://dm3gqheyx1prf"]
 
 [ext_resource type="Shader" uid="uid://d4kldxp6gw87k" path="res://shaders/vaporsky.gdshader" id="1_bl13t"]
-[ext_resource type="PackedScene" uid="uid://bhop26d66s581" path="res://scenes/player.tscn" id="2_bl13t"]
-[ext_resource type="Material" uid="uid://dw40rsqkm42km" path="res://textures/Tile.tres" id="3_iyx0m"]
+[ext_resource type="PackedScene" uid="uid://bbt8hpm5dk2eg" path="res://assets/maps/map1.blend" id="3_iyx0m"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_iyx0m"]
 shader = ExtResource("1_bl13t")
@@ -52,7 +51,8 @@ sky = SubResource("Sky_74lek")
 tonemap_mode = 2
 ssr_enabled = true
 glow_enabled = true
-glow_bloom = 0.01
+glow_bloom = 0.05
+glow_blend_mode = 1
 
 [node name="Test" type="Node3D"]
 
@@ -63,15 +63,6 @@ shadow_enabled = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_iyx0m")
 
-[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
-material_override = ExtResource("3_iyx0m")
-use_collision = true
+[node name="map1" parent="." instance=ExtResource("3_iyx0m")]
 
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="CSGCombiner3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -19.5, 0)
-radius = 50.0
-height = 39.0
-sides = 16
-
-[node name="Player" parent="." instance=ExtResource("2_bl13t")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+[editable path="map1"]

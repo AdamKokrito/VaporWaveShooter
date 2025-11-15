@@ -1,12 +1,15 @@
 extends CharacterBody3D
 class_name Player
 
+
+
 @onready var head: Node3D = $Head
 @onready var camera_effect: CameraEffects = $Head/Camera
 @onready var stand_col: CollisionShape3D = $StandCol
 @onready var crouch_col: CollisionShape3D = $CrouchCol
 @onready var crouch_check: ShapeCast3D = $CrouchCheck
 @onready var step_handler: StepHandlerComponent = $Components/StepHandler
+@onready var stats_handler: StatsHandler = $Components/StatsHandler
 @onready var state_chart: StateChart = $StateChart
 
 
@@ -22,20 +25,12 @@ class_name Player
 @export var jump_velocity : float = 5.0
 @export var fall_velocity_threshold : float = -5.0
 
-
-
 var _input_dir : Vector2 = Vector2.ZERO
 var _mouvement_velocity : Vector3 = Vector3.ZERO
 var sprint_modifier : float = 0.0
 var crouch_modifier : float = 0.0 
 var _speed : float = 0.0
 var curren_fall_velocity : float
-
-func _ready() -> void:
-	Global.player = self
-
-func _exit_tree() -> void:
-	Global.player = null
 
 func _physics_process(delta: float) -> void:
 	if is_on_floor():

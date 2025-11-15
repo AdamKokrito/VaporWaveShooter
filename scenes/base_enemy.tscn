@@ -1,26 +1,24 @@
-[gd_scene load_steps=13 format=4 uid="uid://ccrk55ebba6wa"]
+[gd_scene load_steps=14 format=4 uid="uid://ccrk55ebba6wa"]
 
 [ext_resource type="Script" uid="uid://0xiixl1wd3f6" path="res://scripts/enemy/base_enemy.gd" id="1_n1jr3"]
 [ext_resource type="Script" uid="uid://d1eo3unyiu8dk" path="res://scripts/stats.gd" id="2_2kb2m"]
 [ext_resource type="Script" uid="uid://doa76srsmuent" path="res://scripts/hit_hurt/hit_box.gd" id="2_sw3va"]
+[ext_resource type="Shader" uid="uid://bps4j05t72kiv" path="res://shaders/chrome.gdshader" id="4_64ljx"]
 [ext_resource type="Script" uid="uid://bnpjxgerfin32" path="res://scripts/enemy/soft_collision.gd" id="4_kegi0"]
 
 [sub_resource type="Resource" id="Resource_kegi0"]
+resource_local_to_scene = true
 script = ExtResource("2_2kb2m")
+max_health = 24
+health = 24
 metadata/_custom_type_script = "uid://d1eo3unyiu8dk"
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_t1as8"]
+radius = 0.25
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_n1jr3"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sw3va"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2kb2m"]
-albedo_color = Color(0.9453125, 0, 1, 1)
-metallic_specular = 0.0
-emission_enabled = true
-emission = Color(1, 0, 0.7734375, 1)
-emission_energy_multiplier = 4.25
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rp6um"]
 
@@ -55,7 +53,14 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_asokj")
 
-[node name="BaseEnemy" type="CharacterBody3D"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tonni"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("4_64ljx")
+shader_parameter/normal_depth = 0.25
+shader_parameter/color_compression = 6.0
+
+[node name="BaseEnemy" type="CharacterBody3D" groups=["enemy"]]
 collision_layer = 4
 script = ExtResource("1_n1jr3")
 stats = SubResource("Resource_kegi0")
@@ -79,14 +84,18 @@ shape = SubResource("CapsuleShape3D_sw3va")
 [node name="Mesh" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 
-[node name="BASE_Low Poly Man" type="MeshInstance3D" parent="Mesh"]
+[node name="Man" type="MeshInstance3D" parent="Mesh"]
 transform = Transform3D(-0.3, 0, -4.5298744e-08, 0, 0.3, 0, 4.5298744e-08, 0, -0.3, 0, 0, 0)
-material_override = SubResource("StandardMaterial3D_2kb2m")
 mesh = SubResource("ArrayMesh_edlly")
 skeleton = NodePath("")
+surface_material_override/0 = SubResource("ShaderMaterial_tonni")
 metadata/extras = {
 "ant_landscape": {}
 }
+
+[node name="BottomCast" type="RayCast3D" parent="Mesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15441895, 0)
+target_position = Vector3(0, 0, -0.6)
 
 [node name="Eyes" type="Node3D" parent="."]
 
