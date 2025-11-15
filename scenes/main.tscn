@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://d3qg6rfdwp5kr"]
+[gd_scene load_steps=7 format=3 uid="uid://d3qg6rfdwp5kr"]
 
 [ext_resource type="PackedScene" uid="uid://dm3gqheyx1prf" path="res://scenes/test.tscn" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://bk8buroylsa04" path="res://scripts/game/game_manager.gd" id="1_sugp2"]
 [ext_resource type="Script" uid="uid://b5j4x7xtlwyf" path="res://scripts/game/wave_manager.gd" id="2_jyhfs"]
+[ext_resource type="AudioStream" uid="uid://btp60822po60p" path="res://assets/audio/Danya Vodovoz - Driven.mp3" id="3_tefeu"]
 [ext_resource type="PackedScene" uid="uid://d3f4d5lvcbvvk" path="res://scenes/interface.tscn" id="5_tbgi4"]
 [ext_resource type="PackedScene" uid="uid://bhop26d66s581" path="res://scenes/player.tscn" id="5_tefeu"]
 
@@ -19,12 +20,17 @@ spawns = NodePath("../../CurrentLevel/Spawner")
 player = NodePath("../../CurrentLevel/Player")
 
 [node name="SpawnTimer" type="Timer" parent="Managers/WaveManager"]
-wait_time = 2.0
+wait_time = 0.5
 autostart = true
 
 [node name="TickTimer" type="Timer" parent="Managers/WaveManager"]
 wait_time = 0.2
 autostart = true
+
+[node name="Music" type="AudioStreamPlayer" parent="Managers"]
+stream = ExtResource("3_tefeu")
+autoplay = true
+bus = &"Music"
 
 [node name="CurrentLevel" type="Node3D" parent="."]
 
@@ -43,6 +49,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 14)
 
 [node name="Spawn4" type="Marker3D" parent="CurrentLevel/Spawner"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -14)
+
+[node name="Spawn5" type="Marker3D" parent="CurrentLevel/Spawner"]
+transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, -9.899495, 0, -9.899495)
+
+[node name="Spawn6" type="Marker3D" parent="CurrentLevel/Spawner"]
+transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, 9.899495, 0, 9.899495)
+
+[node name="Spawn7" type="Marker3D" parent="CurrentLevel/Spawner"]
+transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, -9.899495, 0, 9.899495)
+
+[node name="Spawn8" type="Marker3D" parent="CurrentLevel/Spawner"]
+transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, 9.899495, 0, -9.899495)
 
 [node name="Player" parent="CurrentLevel" instance=ExtResource("5_tefeu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)

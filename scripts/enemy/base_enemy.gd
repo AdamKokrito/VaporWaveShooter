@@ -18,6 +18,8 @@ signal damaged
 @onready var soft_collision: SoftCollision = $SoftCollision
 @onready var bottom_cast: RayCast3D = $Mesh/BottomCast
 @onready var man: MeshInstance3D = $Mesh/Man
+@onready var death_sfx: AudioStreamPlayer = $SFX/Death
+@onready var point_sfx: AudioStreamPlayer = $SFX/Point
 
 
 
@@ -40,6 +42,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if !player:return
+	if _is_dead:return
 	
 	if bottom_cast.is_colliding():
 		climb()
@@ -73,21 +76,29 @@ func climb()->void:
 	velocity.y = 4.0
 
 func take_damage(value:int)->void:
+	if _is_dead:return
+	
 	stats.health -= value
-	if _is_dead:
-		Global.points += points
-	else:
-		Global.points += 10
-	damaged.emit()
 	
 	base_mat.set_shader_parameter("color_compression",-6)
 	stun = true
-	await get_tree().create_timer(0.2).timeout
-	base_mat.set_shader_parameter("color_compression",6)
-	stun = false
 	
+	if !_is_dead:
+		Global.points += 10
+		point_sfx.play()
+		damaged.emit()
+		await get_tree().create_timer(0.2).timeout
+		base_mat.set_shader_parameter("color_compression",6)
+		stun = false
+	else:
+		Global.points += points
+		damaged.emit()
+
 
 func dead()->void:
 	_is_dead = true
+	death_sfx.play()
 	no_health.emit()
+	hit_box.monitorable = false
+	await death_sfx.finished
 	queue_free()

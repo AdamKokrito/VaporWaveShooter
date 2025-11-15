@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://bhop26d66s581"]
+[gd_scene load_steps=34 format=3 uid="uid://bhop26d66s581"]
 
 [ext_resource type="Script" uid="uid://bnorctsg14k6r" path="res://scripts/player/mouse_capture_component.gd" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://bul1vpdae7den" path="res://scripts/player/player.gd" id="1_g2els"]
@@ -24,6 +24,8 @@
 [ext_resource type="Script" uid="uid://3tcow7oyiab4" path="res://scripts/hit_hurt/hurt_box.gd" id="21_i4ail"]
 [ext_resource type="Script" uid="uid://jqxq4nbol7ps" path="res://scripts/weapons/weapon_controller.gd" id="22_ke2ow"]
 [ext_resource type="Resource" uid="uid://dv83oc30rw574" path="res://resources/G19/G19.tres" id="23_ujl30"]
+[ext_resource type="AudioStream" uid="uid://bw3dq0lfwsfdi" path="res://assets/audio/player_hurt.sfxr" id="25_ke2ow"]
+[ext_resource type="AudioStream" uid="uid://brvrbkd0xpv1f" path="res://assets/audio/g19.sfxr" id="26_ujl30"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_u8vuu"]
 
@@ -36,6 +38,16 @@ script = ExtResource("2_a38lo")
 metadata/_custom_type_script = "uid://d1eo3unyiu8dk"
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_a38lo"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_ke2ow"]
+random_pitch = 1.1
+streams_count = 1
+stream_0/stream = ExtResource("25_ke2ow")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_31cv2"]
+random_pitch = 1.1
+streams_count = 1
+stream_0/stream = ExtResource("26_ujl30")
 
 [node name="Player" type="CharacterBody3D"]
 collision_layer = 2
@@ -53,7 +65,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 script = ExtResource("2_qhqgy")
 component_mouse_capture = NodePath("../Components/MouseCaptureComponent")
 camera = NodePath("Camera")
-crouch_offset = -0.5
 
 [node name="Camera" type="Camera3D" parent="Head" node_paths=PackedStringArray("player")]
 script = ExtResource("3_4r5pv")
@@ -209,17 +220,20 @@ head = NodePath("../../Head")
 stairs_ahead = NodePath("../../StairsAhead")
 stairs_below = NodePath("../../StairsBelow")
 
-[node name="StatsHandler" type="Node" parent="Components" node_paths=PackedStringArray("hurt_box")]
+[node name="StatsHandler" type="Node" parent="Components" node_paths=PackedStringArray("hurt_box", "hurt_sfx", "look_at_enemy")]
 script = ExtResource("21_4ni07")
 stats = SubResource("Resource_4ni07")
 hurt_box = NodePath("../../HurtBox")
+hurt_sfx = NodePath("../../SFX/PlayerHurt")
+look_at_enemy = NodePath("../../LookAtEnemy")
 
-[node name="WeaponController" type="Node" parent="Components" node_paths=PackedStringArray("player", "weapon_holder", "raycast")]
+[node name="WeaponController" type="Node" parent="Components" node_paths=PackedStringArray("player", "weapon_holder", "raycast", "weapon_sfx")]
 script = ExtResource("22_ke2ow")
 player = NodePath("../..")
 current_weapon = ExtResource("23_ujl30")
 weapon_holder = NodePath("../../Head/Camera")
 raycast = NodePath("../../Head/Camera/ShootCast")
+weapon_sfx = NodePath("../../SFX/WeaponSFX")
 
 [node name="StairsAhead" type="RayCast3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4512124, -0.89100194)
@@ -237,6 +251,19 @@ metadata/_custom_type_script = "uid://3tcow7oyiab4"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="HurtBox"]
 shape = SubResource("CapsuleShape3D_a38lo")
+
+[node name="LookAtEnemy" type="Node3D" parent="."]
+
+[node name="SFX" type="Node" parent="."]
+
+[node name="PlayerHurt" type="AudioStreamPlayer" parent="SFX"]
+stream = SubResource("AudioStreamRandomizer_ke2ow")
+bus = &"SFX"
+
+[node name="WeaponSFX" type="AudioStreamPlayer" parent="SFX"]
+stream = SubResource("AudioStreamRandomizer_31cv2")
+max_polyphony = 6
+bus = &"SFX"
 
 [connection signal="state_physics_processing" from="StateChart/Root/Mouvement/Grounded" to="StateMachine/Root/Mouvement/Grounded" method="_on_grounded_state_physics_processing"]
 [connection signal="state_physics_processing" from="StateChart/Root/Mouvement/Grounded/idle" to="StateMachine/Root/Mouvement/Grounded/Idle" method="_on_idle_state_physics_processing"]

@@ -3,7 +3,7 @@ class_name WaveManager
 
 signal enemy_damage
 
-const OFFSET : Vector3 = Vector3(0,0.5,0)
+const OFFSET : Vector3 = Vector3(0,1.0,0)
 
 @onready var tick_timer: Timer = $TickTimer
 @onready var spawn_timer: Timer = $SpawnTimer
@@ -15,7 +15,7 @@ const OFFSET : Vector3 = Vector3(0,0.5,0)
 var enemy_count : int = 0
 var _current_enemy : BaseEnemy 
 
-const MAX_ENEMYS : int = 1
+const MAX_ENEMYS : int = 60
 static var enemy_pool : Array = []
 
 
@@ -46,7 +46,7 @@ func spawn_enemy(global_pos:Vector3,parent:Node3D)->void:
 	
 	enemy_instance.global_position = global_pos
 	enemy_instance.stats.health = enemy_instance.stats.max_health
-	
+	enemy_instance.hit_box.monitorable = true
 
 func _on_spawn_timer_timeout() -> void:
 	var random_spawn : Marker3D = spawns.get_child(randi_range(0,spawns.get_child_count(false) - 1))

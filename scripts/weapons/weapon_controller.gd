@@ -6,6 +6,7 @@ class_name WeaponController
 @export var current_weapon : Weapon
 @export var weapon_holder : Node3D
 @export var raycast : RayCast3D
+@export var weapon_sfx : AudioStreamPlayer
 
 @export_group("Weapon Effects")
 @export var weapon_sway_amount : float = 0.1
@@ -62,12 +63,13 @@ func spawn_weapon_model()-> void:
 func shoot()->void:
 	anim_player.play("shoot")
 	weapon_holder.add_weapon_kick(1,1,1)
+	weapon_sfx.play()
 	if raycast.is_colliding():
 		var target : Node3D = raycast.get_collider()
 		var point : Vector3 = raycast.get_collision_point()
 		if target.has_method("take_damage"):
 			target.take_damage(current_weapon.damage)
-			ParticalPool.spawn_partical(point,target)
+			ParticalPool.spawn_partical(point,get_tree().current_scene.get_node_or_null("CurrentLevel"))
 
 
 func apply_clip_and_fov_shader_to_view_model(node3d : Node3D, fov_or_negative_for_unchanged = -1.0):

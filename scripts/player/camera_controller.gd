@@ -12,7 +12,7 @@ const DEFAULT_HEIGHT : float = 0.5
 @export_range(-90,-60) var tilt_lower_limits : int = -90
 @export_range(60,90) var tilt_uper_limits : int = 90
 @export_group("Crouch cam")
-@export var crouch_offset : float = 0.0
+@export var crouch_offset : float = -0.5
 @export var crouch_speed : float = 5.0
 
 var _rotation : Vector3

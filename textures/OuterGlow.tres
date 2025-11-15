@@ -9,5 +9,5 @@ albedo_color = Color(0, 0, 0, 1)
 render_priority = 0
 next_pass = SubResource("StandardMaterial3D_07li7")
 shader = ExtResource("1_07li7")
-shader_parameter/outline_color = Color(0, 0.578125, 1, 1)
+shader_parameter/outline_color = Color(0.7823223, 0.8352941, 0.47843137, 1)
 shader_parameter/outline_threshold = 0.2
